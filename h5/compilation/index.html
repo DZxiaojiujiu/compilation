@@ -11,9 +11,18 @@
 	</head>
 	<body>
 		<div>
-			<audio src="mp3/bgm.mp3" controls="controls" autoplay="autoplay"></audio>
+			<!-- <audio src="mp3/bgm.mp3" controls="controls" autoplay="autoplay"></audio> -->
 			
-			<audio src="mp3/bgm.mp3" autoplay></audio>
+			<!-- <audio id="audio" src="mp3/bgm.mp3" style="opacity:0" preload="auto" controls loop hidden="true"/>  -->
+			 
+			 
+			 <!-- <audio style="display: none;" id="VideoId">
+				<source src="http://cdn.iqzhan.com/qzhan/audio.mp3" type="audio/mp3"/>
+			</audio> -->
+			
+			
+			<audio id="VideoId" src="mp3/bgm.mp3" controls="controls" preload="auto" controls loop>
+			 
 			<!-- <img  id='music' class="play" src="img/play.png" />
 			<img class="homeBg" src="img/homeBg.png" /> -->
 			<div class="buttonStart">开始合拍</div>
@@ -28,5 +37,12 @@
 				 $("#music").removeAttr("class","play");
 			 }
 		 })
+		
+		 $(document).ready(function(){
+			 $(function(){
+				var VideoId = document.getElementById("VideoId");
+							VideoId.play();
+				}, 1000);
+			});
 	</script>
 </html>

@@ -17,8 +17,8 @@
 			<div class="buttonStart">拍摄</div>
 			<div class="cont" id="app">
 				<div class="mycanvas" id="myCanvas">
-					<div class="addNewImg" v-for="(item,index) in contList" :style="{zIndex:(index)}">
-						<div>
+					<div class="addNewImg" :class="layerIndex == index ? 'addNewImgBorder' : '' " @click="onClicklayerIndex(index)"   v-for="(item,index) in contList" :style="{zIndex:(index)}">
+						<div v-if="layerIndex == index">
 							<img class="close" src="img/close.png" @click="closeImg(index)" />
 							<div class="operation">
 								<div @click="upImg(index)"><span>上一层</span></div>
@@ -50,6 +50,7 @@
 	<script src="js/jquery-3.5.1.min.js"></script>
 	<script>
 		var oW, oH;
+		
 		$('#contLi').on('touchstart', '.addNewImg', function(e) {
 			var touches = e.touches[0];
 			oW = touches.clientX - this.offsetLeft;
@@ -89,6 +90,7 @@
 				listA: ['#CFB20D', '#922C38', '#D62E1F', '#38526C'],
 				listB: ['img/A1.png', 'img/A2.png'],
 				contList: [],
+				layerIndex: 0
 			},
 			methods: {
 				onClickImg(e) {
@@ -96,6 +98,7 @@
 				},
 				onAddImg(item) {
 					this.contList.push(item)
+					layerIndex == this.contList.length
 				},
 				closeImg(index) {
 					this.contList.splice(index, 1);
@@ -113,7 +116,10 @@
 				swapItems: function(arr, index1, index2) {
 					arr[index1] = arr.splice(index2, 1, arr[index1])[0];
 					return arr;
-				}
+				},
+				onClicklayerIndex(index) {
+					this.layerIndex = index
+				},
 				
 			},
 		})

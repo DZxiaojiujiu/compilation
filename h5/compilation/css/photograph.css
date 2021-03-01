@@ -129,8 +129,11 @@ body{
 	height: 4rem;
 	line-height: 4rem;
 	text-align: center;
-	border: 1px dashed #fff;
 	border-radius: 0.125rem;
+}
+
+.addNewImgBorder{
+	border: 1px dashed #fff;
 }
 
 .addNewImg .mobileImg{

@@ -2,22 +2,120 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<title></title>
 		<script src="js/rem.min.js"></script>
-		<link  rel="stylesheet" href="css/index.css"  />
+		<script src="js/vue.js"></script>
+		<link rel="stylesheet" href="css/photograph.css" />
 	</head>
 	<body>
-		<div>
-			<img  id='music' class="play" src="img/play.png" />
+		<div id="contLi">
+			<img id='music' class="play" src="img/play.png" />
 			<img class="homeBg" src="img/homeBg.png" />
-			<div class="buttonStart">开始合拍</div>
+			<div class="buttonStart">拍摄</div>
+			<div class="cont" id="app">
+				<div class="mycanvas" id="myCanvas">
+					<div class="addNewImg" v-for="(item,index) in contList" :style="{zIndex:(index)}">
+						<div>
+							<img class="close" src="img/close.png" @click="closeImg(index)" />
+							<div class="operation">
+								<div @click="upImg(index)"><span>上一层</span></div>
+								<div @click="dwImg(index)"><span>下一层</span></div>
+							</div>
+						</div>
+						<img class="mobileImg" :src="item" />
+					</div>
+				</div>
+				<div class="slider">
+					<div class="sliderTitle">
+						<div @click="onClickImg('a')" :class="activeClass =='a' ? 'active':''"><img :src="activeClass =='a' ? 'img/zhaopians.png':'img/zhaopian.png'" /></div>
+						<div @click="onClickImg('b')" :class="activeClass =='b' ? 'active':''"><img :src="activeClass =='b' ? 'img/renwus.png':'img/renwu.png'" /></div>
+						<div @click="onClickImg('c')" :class="activeClass =='c' ? 'active':''"><img :src="activeClass =='c' ? 'img/maomis.png':'img/maomi.png'" /></div>
+					</div>
+					<div class="sliderCont">
+						<div class="sliderContListA" v-if="activeClass == 'a'" v-for="item in listA" :style="{background:(item)}"></div>
+
+						<div class="sliderContListA" v-if="activeClass == 'b'" v-for="item in listB" :style="{background:(item)}">
+							<!-- <img :src="item" onClick="onAddImg(this)" :data-url='item' /> -->
+							<img :src="item" @click="onAddImg(item)" :data-url='item' />
+						</div>
+					</div>
+
+				</div>
+			</div>
 		</div>
 	</body>
 	<script src="js/jquery-3.5.1.min.js"></script>
 	<script>
-	 
+		var oW, oH;
+		$('#contLi').on('touchstart', '.addNewImg', function(e) {
+			var touches = e.touches[0];
+			oW = touches.clientX - this.offsetLeft;
+			oH = touches.clientY - this.offsetTop;
+			//阻止页面的滑动默认事件
+			document.addEventListener("touchmove", defaultEvent, false);
+		})
+
+		$('#contLi').on('touchmove', '.addNewImg', function(e) {
+			var touches = e.touches[0];
+			var oLeft = touches.clientX - oW;
+			var oTop = touches.clientY - oH;
+			if (oLeft < 0) {
+				oLeft = 0;
+			} else if (oLeft > document.documentElement.clientWidth - e.offsetWidth) {
+				oLeft = (document.documentElement.clientWidth - e.offsetWidth);
+			}
+
+			this.style.left = oLeft + "px";
+			this.style.top = oTop + "px";
+		})
+
+		$('#contLi').on('touchend', '.addNewImg', function(e) {
+			document.removeEventListener("touchmove", defaultEvent, false);
+		})
+
+		function defaultEvent(e) {
+			e.preventDefault();
+		}
+	</script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				lent: 0,
+				activeClass: 'a',
+				listA: ['#CFB20D', '#922C38', '#D62E1F', '#38526C'],
+				listB: ['img/A1.png', 'img/A2.png'],
+				contList: [],
+			},
+			methods: {
+				onClickImg(e) {
+					this.activeClass = e;
+				},
+				onAddImg(item) {
+					this.contList.push(item)
+				},
+				closeImg(index) {
+					this.contList.splice(index, 1);
+				},
+				upImg(index) {
+					if (index !== this.contList.length -1) {
+						this.contList = this.swapItems( this.contList, index, index + 1)
+					}
+				},
+				dwImg(index) {
+					 if (index !== 0) {
+						this.contList = this.swapItems( this.contList, index, index - 1)
+					}
+				},
+				swapItems: function(arr, index1, index2) {
+					arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+					return arr;
+				}
+				
+			},
+		})
 	</script>
 </html>
